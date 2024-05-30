@@ -16,11 +16,11 @@
     <div class="body1 mt-16">
       {{ description }}
     </div>
-    <a class="button-link" :href="buttonLink">
+    <NuxtLink class="button-link" :to="buttonLink">
       <el-button class="secondary">
         {{ buttonText }}
       </el-button>
-    </a>
+    </NuxtLink>
   </div>
 </template>
 
