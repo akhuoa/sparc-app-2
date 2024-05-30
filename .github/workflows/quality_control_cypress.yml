@@ -111,6 +111,13 @@ jobs:
         containers: [1, 2]
 
     steps:
+      - name: Cleanup pre-installed tools
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -124,19 +131,23 @@ jobs:
         env:
           ROOT_URL: "https://staging.sparc.science"
         uses: cypress-io/github-action@v6
+        timeout-minutes: 30
         with:
           wait-on: ${{ env.ROOT_URL }}
           record: true
           parallel: true
           spec: tests/cypress/e2e/databrowser.cy.js,tests/cypress/e2e/datasets.cy.js,tests/cypress/e2e/mapsviewer.cy.js
+          tag: QC-${{github.event.inputs.PORTAL_TARGET}}
 
       - name: Manual Run Testing against Production
         if: ${{ github.event.inputs.PORTAL_TARGET == 'Production' }}
         env:
           ROOT_URL: "https://sparc.science"
         uses: cypress-io/github-action@v6
+        timeout-minutes: 30
         with:
           wait-on: ${{ env.ROOT_URL }}
           record: true
           parallel: true
           spec: tests/cypress/e2e/databrowser.cy.js,tests/cypress/e2e/datasets.cy.js,tests/cypress/e2e/mapsviewer.cy.js
+          tag: QC-${{github.event.inputs.PORTAL_TARGET}}
