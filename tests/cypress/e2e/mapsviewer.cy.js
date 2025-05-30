@@ -201,13 +201,37 @@ mapTypes.forEach((map) => {
                   message: `Clicked on the ${$title.text()}`,
                   type: 'info'
                 })
+                const expectedTitle = $title.text().trim();
+
+                // Stub the clipboard write function
+                cy.window().then((win) => {
+                  cy.spy(win.navigator.clipboard, 'write').as('clipboardWrite');
+                });
+
                 // Check for copy button
                 cy.get('.el-button.copy-clipboard-button:visible').click()
-                cy.wait(5000)
-                cy.window().then(win => {
-                  win.navigator.clipboard.readText().then(text => {
-                    expect(text, 'The content should be copied to clipboard').to.contain($title.text().trim())
-                  })
+                cy.get('@clipboardWrite').should('have.been.calledOnce');
+
+                // We have two types of clipboard data, plain text and formatted html
+                cy.get('@clipboardWrite').its('args[0][0]').then((clipboardItems) => {
+                  expect(clipboardItems).to.be.an('array').and.to.have.length.of.at.least(1);
+
+                  const firstClipboardItem = clipboardItems[0];
+
+                  expect(firstClipboardItem.types).to.include('text/html');
+                  expect(firstClipboardItem.types).to.include('text/plain');
+
+                  cy.wrap(firstClipboardItem.getType('text/html')).then((htmlBlob) => {
+                    return new Response(htmlBlob).text();
+                  }).then((actualHtml) => {
+                    expect(actualHtml).to.include(expectedTitle);
+                  });
+
+                  cy.wrap(firstClipboardItem.getType('text/plain')).then((plainTextBlob) => {
+                    return new Response(plainTextBlob).text();
+                  }).then((actualPlainText) => {
+                    expect(actualPlainText).to.include(expectedTitle);
+                  });
                 })
               })
               cy.get('.block > .subtitle').should(($description) => {
