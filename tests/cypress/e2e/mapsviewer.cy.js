@@ -203,7 +203,7 @@ mapTypes.forEach((map) => {
                 })
                 const expectedTitle = $title.text().trim();
 
-                // Stub the clipboard write function
+                // Spy the clipboard write function
                 cy.window().then((win) => {
                   cy.spy(win.navigator.clipboard, 'write').as('clipboardWrite');
                 });
