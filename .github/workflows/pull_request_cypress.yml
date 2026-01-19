@@ -107,15 +107,11 @@ jobs:
         uses: cypress-io/github-action@v6
         env:
           ROOT_URL: ${{ secrets.ROOT_URL }} # http://localhost:3000
-          CYPRESS_RECORD_KEY: '' # Explicitly disable recording
         with:
           build: yarn build
           start: yarn preview
           wait-on: ${{ secrets.ROOT_URL }}
           record: false
-          parallel: false
-          tag: PR
-          ci-build-id: "${{ needs.build-uuid.outputs.uuid }}-${{ github.workflow }}-${{ github.event_name }}"
 
       - name: Skip tests
         if: steps.checkUser.outputs.require-result == 'false'
