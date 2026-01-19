@@ -97,9 +97,23 @@ jobs:
         with:
           node-version: 18.17.1
 
+      # Ensure feature flag is available for both internal and forked PRs
+      - name: Set SHOW_SPARC_DASHBOARD for build
+        run: |
+          if [ "${{ github.event.pull_request.head.repo.full_name }}" = "${{ github.repository }}" ]; then
+            echo "SHOW_SPARC_DASHBOARD=${{ secrets.SHOW_SPARC_DASHBOARD }}" >> $GITHUB_ENV
+            echo "NUXT_PUBLIC_SHOW_SPARC_DASHBOARD=${{ secrets.SHOW_SPARC_DASHBOARD }}" >> $GITHUB_ENV
+            echo "Using SHOW_SPARC_DASHBOARD from secrets (internal PR)"
+          else
+            echo "SHOW_SPARC_DASHBOARD=false" >> $GITHUB_ENV
+            echo "NUXT_PUBLIC_SHOW_SPARC_DASHBOARD=false" >> $GITHUB_ENV
+            echo "Using fallback SHOW_SPARC_DASHBOARD=false (fork PR)"
+          fi
+
       - name: Debug environment variables
         run: |
           echo "SHOW_SPARC_DASHBOARD: $SHOW_SPARC_DASHBOARD"
+          echo "NUXT_PUBLIC_SHOW_SPARC_DASHBOARD: $NUXT_PUBLIC_SHOW_SPARC_DASHBOARD"
 
       - name: Automated Run Testing when Pull Request
         if: steps.checkUser.outputs.require-result == 'true'
