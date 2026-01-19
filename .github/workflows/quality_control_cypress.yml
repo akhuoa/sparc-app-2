@@ -113,6 +113,6 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           wait-on: ${{ env.ROOT_URL }}
-          record: true
+          record: false
           spec: tests/cypress/e2e/datasets/*.cy.js,tests/cypress/e2e/databrowser.cy.js,tests/cypress/e2e/mapsviewer.cy.js,tests/cypress/e2e/portallogin.cy.js
           tag: QC

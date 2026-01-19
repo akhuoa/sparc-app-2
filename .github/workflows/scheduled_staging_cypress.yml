@@ -99,5 +99,5 @@ jobs:
           ROOT_URL: "https://staging.sparc.science"
         with:
           wait-on: ${{ env.ROOT_URL }}
-          record: true
+          record: false
           tag: Scheduled-Staging

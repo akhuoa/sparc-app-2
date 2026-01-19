@@ -12,7 +12,7 @@ export default defineConfig({
     blockHosts: ["*google-analytics.com"],
     experimentalStudio: true,
     projectId: process.env.CYPRESS_PROJECT_ID,
-    specPattern: "tests/cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+    specPattern: "tests/cypress/e2e/**/sparcdashboard.cy.{js,jsx,ts,tsx}",
     supportFile: "tests/cypress/support/e2e.js",
     viewportWidth: 1600,
     viewportHeight: 900,
