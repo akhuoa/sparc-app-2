@@ -1,7 +1,7 @@
 name: Pull Request Cypress Testing
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened]
     branches: [master, main]
 
@@ -28,6 +28,7 @@ env:
   DEPLOY_ENV: ${{ secrets.DEPLOY_ENV }}
   DISABLE_REDIRECT_SSL: ${{ secrets.DISABLE_REDIRECT_SSL }}
   FLATMAP_API_HOST: ${{ secrets.FLATMAP_API_HOST }}
+  DASHBOARD_FLATMAP_API: ${{ secrets.DASHBOARD_FLATMAP_API}}
   LOGIN_API_URL: ${{ secrets.LOGIN_API_URL }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
   NPM_CONFIG_PRODUCTION: ${{ secrets.NPM_CONFIG_PRODUCTION }}
@@ -40,6 +41,7 @@ env:
   SHOW_LOGIN_FEATURE: ${{ secrets.SHOW_LOGIN_FEATURE }}
   SHOW_METRICS: ${{ secrets.SHOW_METRICS }}
   SHOW_OSPARC_TAB: ${{ secrets.SHOW_OSPARC_TAB }}
+  SHOW_SPARC_DASHBOARD: ${{ secrets.SHOW_SPARC_DASHBOARD }}
   SHOW_TIMESERIES_VIEWER: ${{ secrets.SHOW_TIMESERIES_VIEWER }}
   SPARC_PORTAL_USER_ID: ${{ secrets.SPARC_PORTAL_USER_ID }}
   SPARC_PORTAL_USER_SECRET: ${{ secrets.SPARC_PORTAL_USER_SECRET }}
@@ -95,6 +97,24 @@ jobs:
         with:
           node-version: 18.17.1
 
+      # Ensure feature flag is available for both internal and forked PRs
+      - name: Set SHOW_SPARC_DASHBOARD for build
+        run: |
+          if [ "${{ github.event.pull_request.head.repo.full_name }}" = "${{ github.repository }}" ]; then
+            echo "SHOW_SPARC_DASHBOARD=${{ secrets.SHOW_SPARC_DASHBOARD }}" >> $GITHUB_ENV
+            echo "NUXT_PUBLIC_SHOW_SPARC_DASHBOARD=${{ secrets.SHOW_SPARC_DASHBOARD }}" >> $GITHUB_ENV
+            echo "Using SHOW_SPARC_DASHBOARD from secrets (internal PR)"
+          else
+            echo "SHOW_SPARC_DASHBOARD=false" >> $GITHUB_ENV
+            echo "NUXT_PUBLIC_SHOW_SPARC_DASHBOARD=false" >> $GITHUB_ENV
+            echo "Using fallback SHOW_SPARC_DASHBOARD=false (fork PR)"
+          fi
+
+      - name: Debug environment variables
+        run: |
+          echo "SHOW_SPARC_DASHBOARD: $SHOW_SPARC_DASHBOARD"
+          echo "NUXT_PUBLIC_SHOW_SPARC_DASHBOARD: $NUXT_PUBLIC_SHOW_SPARC_DASHBOARD"
+
       - name: Automated Run Testing when Pull Request
         if: steps.checkUser.outputs.require-result == 'true'
         id: cypress
@@ -105,10 +125,7 @@ jobs:
           build: yarn build
           start: yarn preview
           wait-on: ${{ secrets.ROOT_URL }}
-          record: true
-          parallel: true
-          tag: PR
-          ci-build-id: "${{ needs.build-uuid.outputs.uuid }}-${{ github.workflow }}-${{ github.event_name }}"
+          record: false
 
       - name: Skip tests
         if: steps.checkUser.outputs.require-result == 'false'

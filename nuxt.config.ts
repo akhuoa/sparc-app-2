@@ -151,6 +151,7 @@ export default defineNuxtConfig({
       ctf_consortia_content_type_id: 'consortia',
       portal_api: process.env.PORTAL_API_HOST || 'https://sparc-api.herokuapp.com',
       flatmap_api: process.env.FLATMAP_API_HOST || 'https://mapcore-demo.org/current/flatmap/v3/',
+      DASHBOARD_FLATMAP_API: process.env.DASHBOARD_FLATMAP_API || "https://mapcore-demo.org/current/flatmap/v3/",
       DEPLOY_ENV: process.env.DEPLOY_ENV || 'development',
       ALGOLIA_API_KEY: process.env.ALGOLIA_API_KEY,
       ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
@@ -230,7 +231,7 @@ export default defineNuxtConfig({
     [
       '/api/__sitemap__/urls'
     ] : [],
-    exclude: process.env.DEPLOY_ENV === 'production' ? 
+    exclude: process.env.DEPLOY_ENV === 'production' ?
     [
       '/datasets/plotviewer',
       '/datasets/simulationviewer',
@@ -240,7 +241,7 @@ export default defineNuxtConfig({
       '/datasets/flatmapviewer',
       '/datasets/imageviewer',
       '/datasets/scaffoldviewer',
-    ] : ['/'],  
+    ] : ['/'],
     xslColumns: [
       { label: 'URL', width: '100%' }
     ],
@@ -248,17 +249,17 @@ export default defineNuxtConfig({
   robots: {
     // provide simple disallow rules for all robots `user-agent: *`
     // disallowing certain pages that are either redirects, authenticated routes, or causing bots to recursively crawl
-    disallow: process.env.DEPLOY_ENV === 'production' ? 
+    disallow: process.env.DEPLOY_ENV === 'production' ?
     [
       '/datasets/file',
       '/datasets/*/version/',
       '/file',
-      '/welcome', 
-      '/user', 
-      '/contact-us', 
+      '/welcome',
+      '/user',
+      '/contact-us',
       '/contact-us/*?*',
-      '/help', 
-      '/signup', 
+      '/help',
+      '/signup',
       '/maps',
       '/news-and-events/submit',
       '/news-and-events/community-spotlight/submit',
