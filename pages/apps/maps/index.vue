@@ -25,7 +25,7 @@
         </div>
         <div class="portal-features">
           <div class="feature-container" v-for="item in appEntries">
-            <img class="logo" :src="item.logoUrl" />
+            <img class="logo" crossorigin="anonymous" :src="item.logoUrl" />
             <el-popover width="fit-content" trigger="click">
               <template #reference>
                 <el-button class="secondary">Open {{ item.buttonText }}</el-button>
