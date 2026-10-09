@@ -6,7 +6,7 @@ import { test, expect } from '@playwright/test'
  * because it doesn't support COEP `credentialless` (see server/middleware/crossOriginIsolation.js).
  */
 // e.g. /datasets/file/<datasetId>/<version>?path=<path to .omex file>
-const simulationFileUrl = process.env.SIMULATION_FILE_URL
+const simulationFileUrl = process.env.SIMULATION_FILE_URL || '/datasets/file/135/8?path=files/primary/simulation.omex'
 
 test.describe('Simulation viewer', () => {
   test.skip(!simulationFileUrl, 'SIMULATION_FILE_URL is not set')
