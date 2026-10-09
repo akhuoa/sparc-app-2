@@ -42,6 +42,9 @@ export default defineConfig({
       TAXON_MODELS: process.env.TAXON_MODELS ? process.env.TAXON_MODELS : 'Rat, Pig',
       SEARCH_IN_MAP: process.env.SEARCH_IN_MAP ? process.env.SEARCH_IN_MAP : 'Heart',
       SCAFFOLD_DATASET_IDS: process.env.SCAFFOLD_DATASET_IDS ? process.env.SCAFFOLD_DATASET_IDS : '100, 103',
+      // crossOriginIsolation.js
+      // e.g. /datasets/file/<datasetId>/<version>?path=<path to .omex file>
+      SIMULATION_FILE_URL: process.env.SIMULATION_FILE_URL ? process.env.SIMULATION_FILE_URL : '/datasets/file/135/8?path=files/primary/simulation.omex',
     }
   },
   fixturesFolder: "tests/cypress/fixtures",
