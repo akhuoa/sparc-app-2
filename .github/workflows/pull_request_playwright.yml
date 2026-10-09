@@ -54,6 +54,7 @@ jobs:
           allow-unsafe-pr-checkout: true
 
       - name: Setup Node.js
+        if: steps.checkUser.outputs.require-result == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 24.20.0
@@ -68,7 +69,8 @@ jobs:
 
       - name: Install Playwright browsers
         if: steps.checkUser.outputs.require-result == 'true'
-        run: yarn playwright install --with-deps webkit chromium
+        # `yarn exec`, as `yarn playwright` runs the "playwright" script (`playwright test`)
+        run: yarn exec playwright install --with-deps webkit chromium
 
       - name: Build and start
         if: steps.checkUser.outputs.require-result == 'true'
