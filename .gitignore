@@ -30,3 +30,7 @@ public/sitemap*
 tests/cypress/videos
 tests/cypress/downloads
 tests/cypress/screenshots
+
+# Playwright
+tests/playwright/results
+playwright-report
